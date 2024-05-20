@@ -1,0 +1,3 @@
+实现了一个基于mysql+python+flask的B/S架构的简易食堂数据库管理系统
+
+config

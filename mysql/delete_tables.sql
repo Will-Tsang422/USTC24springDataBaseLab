@@ -1,0 +1,11 @@
+# 删除所有表，先删除引用外键的表
+DROP TABLE IF EXISTS `Income`;
+DROP TABLE IF EXISTS `Employee`;
+DROP TABLE IF EXISTS `Supply`;
+DROP TABLE IF EXISTS `Student`;
+DROP TABLE IF EXISTS `Admin`;
+DROP TABLE IF EXISTS `identification`;
+DROP TABLE IF EXISTS `Food`;
+DROP TABLE IF EXISTS `Window`;
+DROP TABLE IF EXISTS `CanteenHours`;
+DROP TABLE IF EXISTS `Canteen`;

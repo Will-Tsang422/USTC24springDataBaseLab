@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>首页</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('/static/images/index.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .content {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: auto;
+            padding: 0;
+            background-color: transparent;
+            color: white;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 36px;
+        }
+        .login-register-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .login-register-btn {
+            display: inline-block;
+            font-size: 16px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .login-register-btn:hover {
+            background-color: #555;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="header">
+            USTC食堂
+        </div>
+        <div class="login-register-container">
+            <div class="dropdown">
+                <button class="login-register-btn dropbtn">注册</button>
+                <div class="dropdown-content">
+                    <a href="/employee_register">员工注册</a>
+                    <a href="/student_register">学生注册</a>
+                </div>
+            </div>
+            <a href="login" class="login-register-btn">登录</a>
+        </div>
+    </div>
+</body>
+</html>

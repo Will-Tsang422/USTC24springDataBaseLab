@@ -1,0 +1,17 @@
+.vscode/
+
+app/config.py
+
+app/__pycache__/
+
+test.ipynb
+
+test.sql
+
+food_images/
+
+static/images/*
+
+!static/images/default.png
+
+!static/images/index.png

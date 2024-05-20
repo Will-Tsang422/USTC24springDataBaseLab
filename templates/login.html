@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登录账户</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin: 100px auto;
+            text-align: left;
+        }
+        .container h1 {
+            margin-top: 0;
+        }
+        .container form {
+            margin-top: 20px;
+        }
+        .container label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .container input[type="text"],
+        .container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .container button:hover {
+            background-color: #0069d9;
+        }
+        .container p a {
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .flash {
+            color: red;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>登录账户</h1>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash">
+                    <p>{{ messages[0] }}</p>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form action="/login" method="post">
+            <label for="userID">用户ID：</label>
+            <input type="text" name="userID" id="userID" required><br>
+            <label for="password">密码：</label>
+            <input type="password" name="password" id="password" required><br>
+            <button type="submit">登录</button>
+        </form>
+        <p>
+            <a href="/index">返回首页</a>
+            <a href="/change_password">修改密码</a>
+        </p>
+    </div>
+</body>
+</html>

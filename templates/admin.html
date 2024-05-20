@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #ecf0f1;
+            padding: 15px 0;
+            width: 100%;
+            text-align: center;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .sidebar .return_home {
+            margin-top: auto;
+            padding-bottom: 20px;
+        }
+        .content {
+            margin-left: 200px; /* 为了不与固定的侧边栏重叠 */
+            padding: 20px;
+            background-color: #ecf0f1;
+            width: calc(100% - 200px); /* 计算剩余的宽度 */
+        }
+        .content h1 {
+            color: #2c3e50;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        th, td {
+            min-width: 120px; /* 调整最小宽度 */
+        }
+        /* form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+        form input[type="text"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        } */
+        form button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        form button:hover {
+            background-color: #0056b3;
+        }
+        .delete-btn {
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#canteen-info" onclick="showSection('canteen-info')">食堂信息</a>
+        <a href="#menu-list" onclick="showSection('menu-list')">菜品名单</a>
+        <a href="#turnover" onclick="showSection('turnover')">营业额</a>
+        <a href="#transaction-records" onclick="showSection('transaction-records')">流水记录</a>
+        <a href="#staff-info" onclick="showSection('staff-info')">员工信息</a>
+        <div class="return_home">
+            <a href="/logout" onclick="showSection('return_home')">退出</a>
+        </div>
+    </div>
+    <div class="content">
+        <h1>欢迎来到管理员界面</h1>
+        <section id="canteen-info" class="section active">
+            <h2>食堂信息</h2>
+            <div class="canteen-details">
+                {% if canteens %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>食堂名称</th>
+                                <th>早餐</th>
+                                <th>午餐</th>
+                                <th>晚餐</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for canteen in canteens %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ canteen.cname }}</td>
+                                    <td>{{ canteen['早餐'] }}</td>
+                                    <td>{{ canteen['午餐'] }}</td>
+                                    <td>{{ canteen['晚餐'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>暂无食堂信息。</p>
+                {% endif %}
+            </div>
+            <h3>修改或新增食堂信息</h3>
+            <form action="/update_canteen" method="POST">
+                <label for="canteen-id">食堂序号：</label>
+                <input type="text" id="canteen-id" name="canteen-id" required><br>
+                <label for="canteen-name">食堂名称：</label>
+                <input type="text" id="canteen-name" name="canteen-name" required><br>
+                <label for="meal-type">供应类型：</label>
+                <select id="meal-type" name="meal-type" required>
+                    <option value="早餐">早餐</option>
+                    <option value="午餐">午餐</option>
+                    <option value="晚餐">晚餐</option>
+                </select><br>
+                <label for="open-time">开放时间：</label>
+                <input type="text" id="open-time" name="open-time" required><br>
+                <label for="close-time">关闭时间：</label>
+                <input type="text" id="close-time" name="close-time" required><br>
+                <button type="submit">提交</button>
+            </form>
+            <h2>窗口信息</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>窗口编号</th>
+                        <th>窗口名称</th>
+                        <th>食堂序号</th>
+                        <th>食堂名称</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for window in windows %}
+                        <tr>
+                            <td>{{ window.wid }}</td>
+                            <td>{{ window.wname }}</td>
+                            <td>{{ window.cid }}</td>
+                            <td>{{ window.cname }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3>插入或修改窗口信息</h3>
+            <form action="/update_window" method="POST">
+                <label for="window-id">窗口编号：</label>
+                <input type="text" id="window-id" name="window-id" required><br>
+                <label for="window-name">窗口名称：</label>
+                <input type="text" id="window-name" name="window-name" required><br>
+                <label for="canteen-id2">食堂序号：</label>
+                <input type="text" id="canteen-id2" name="canteen-id2" required><br>
+                <button type="submit">提交</button>
+            </form>
+        </section>                     
+        <section id="menu-list" class="section">
+            <h2>菜品名单</h2>
+            <!-- 新增插入菜品表单 -->
+            <div>
+                <h3>插入或修改菜品</h3>
+                <form id="insert-food-form" action="/insert_food" method="post">
+                    <label for="fid">菜品编号:</label>
+                    <input type="text" id="fid" name="fid" value="0" required>
+                    <label for="fname">菜品名称:</label>
+                    <input type="text" id="fname" name="fname" value="修改则无需填写" required>
+                    <label for="price">价格:</label>
+                    <input type="text" id="price" name="price" value="0" required>
+                    <label for="wid">窗口号:</label>
+                    <input type="text" id="wid" name="wid" required>
+                    <select id="meal-type2" name="meal-type2" required>
+                        <option value="早餐">早餐</option>
+                        <option value="午餐">午餐</option>
+                        <option value="晚餐">晚餐</option>
+                    </select>
+                    <button type="submit">添加菜品</button>
+                </form>
+            </div>
+            <div>
+                <a href="/upload_avatar" class="btn btn-primary">上传图片</a>
+            </div>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>图片</th> <!-- 新增图片列 -->
+                            <th>菜品名称</th>
+                            <th>价格</th>
+                            <th>窗口名</th>
+                            <th>食堂名</th>
+                            <th>操作</th> <!-- 新增操作列 -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for food in foods %}
+                        <tr>
+                            <td>{{ food.fid }}</td>
+                            <td><img src="{{ food.path }}" alt="{{ food.fname }}" style="width: 3vw;"></td> <!-- 新增图片列 -->
+                            <td>{{ food.fname }}</td>
+                            <td>￥{{ food.price }}</td>
+                            <td>{{ food.wname }}</td>
+                            <td>{{ food.cname }}</td>
+                            <td><span class="delete-food" onclick="confirmDeleteFood('{{ food.fid }}')">❌</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>   
+                </table> 
+            </div>
+            <h2>供应表</h2>
+            <h3>删除供应</h3>
+            <form action="/delete_supply" method="POST">
+                <label for="fid">菜品编号：</label>
+                <input type="text" id="fid" name="fid" required><br>
+                <label for="wid">窗口编号：</label>
+                <input type="text" id="wid" name="wid" required><br>
+                <label for="meal-type3">供应时间：</label>
+                <select id="meal-type3" name="meal-type3" required>
+                    <option value="早餐">早餐</option>
+                    <option value="午餐">午餐</option>
+                    <option value="晚餐">晚餐</option>
+                </select><br>
+                <button type="submit">提交</button>
+            </form>
+            <div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>菜品序号</th>
+                            <th>菜品名</th>
+                            <th>窗口序号</th>
+                            <th>供应时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for supply in supplys %}
+                            <tr>
+                                <td>{{ supply.fid }}</td>
+                                <td>{{ supply.fname }}</td>
+                                <td>{{ supply.wid }}</td>
+                                <td>{{ supply.meal_type }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <section id="turnover" class="section">
+            <h2>营业额</h2>
+            <p>本月营业额: {{ today_total }}</p>
+            <canvas id="myChart" width="300" height="300"></canvas>
+            {# 以表格形式打印每天的总收入 #}
+            <table>
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>总收入</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in everyday %}
+                        <tr>
+                            <td>{{ day.date }}</td>
+                            <td>{{ day.total }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section id="transaction-records" class="section">
+            <h2>流水记录</h2>
+            {% if pay_history %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>交易时间</th>
+                            <th>学生ID</th>
+                            <th>窗口序号</th>
+                            <th>交易额</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in pay_history %}
+                            <tr>
+                                <td>{{ record.deal_time }}</td>
+                                <td>{{ record.sid }}</td>
+                                <td>{{ record.wid }}</td>
+                                <td>{{ record.earnings }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>暂无交易记录。</p>
+            {% endif %}
+        </section>
+        <section id="staff-info" class="section">
+            <h2>员工信息</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>员工编号</th>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>性别</th>
+                        <th>电话</th>
+                        <th>窗口号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>{{ employee.eid }}</td>
+                            <td>{{ employee.ename }}</td>
+                            <td>{{ employee.age }}</td>
+                            <td>{{ employee.gender }}</td>
+                            <td>{{ employee.Tel }}</td>
+                            <td>
+                                <input type="text" class="window-number" data-eid="{{ employee.eid }}" value="{{ employee.wid }}">
+                            </td>
+                            <td>
+                                <span class="delete-btn" onclick="confirmDelete('{{ employee.eid }}')">❌</span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('.section');
+            sections.forEach(function(section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function confirmDelete(eid) {
+            if (confirm("确定要删除该员工吗？")) {
+                window.location.href = "/delete_employee?eid=" + eid;
+            }
+        }
+
+        function confirmDeleteFood(fid) {
+            if (confirm("确定要删除该菜品吗？")) {
+                window.location.href = "/delete_food?fid=" + fid;
+            }
+        }
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        var data = {
+            labels: {{ names|tojson|safe }},
+            datasets: [{
+                data: {{ totals|tojson|safe }},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: false,
+            }
+        });
+
+        document.querySelectorAll('.window-number').forEach(function(input) {
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    var eid = this.dataset.eid;
+                    var newWindowNumber = this.value;
+                    // 发送请求到服务器更新窗口号
+                    // 这里的URL和请求方法需要根据实际后端接口进行修改
+                    fetch('/update_window_number', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'eid=' + encodeURIComponent(eid) + '&newWindowNumber=' + encodeURIComponent(newWindowNumber),
+                    }).then(function(response) {
+                        if (response.ok) {
+                            alert('窗口号更新成功');
+                        } else {
+                            alert('窗口号更新失败');
+                        }
+                    });
+                }
+            });
+        });
+        
+        
+    </script>
+</body>
+</html>

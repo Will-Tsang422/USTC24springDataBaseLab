@@ -1,9 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField, StringField
 from wtforms.validators import DataRequired
-from werkzeug.utils import secure_filename
-import os
-import pymysql
 
 
 # 允许上传的文件扩展名

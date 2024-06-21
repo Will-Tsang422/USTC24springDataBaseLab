@@ -9,4 +9,6 @@ DROP PROCEDURE IF EXISTS buy_food;
 
 DROP PROCEDURE IF EXISTS insert_canteen;
 
+DROP PROCEDURE IF EXISTS delete_canteen;
+
 DROP PROCEDURE IF EXISTS insert_window;

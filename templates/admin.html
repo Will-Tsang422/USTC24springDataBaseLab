@@ -157,9 +157,9 @@
                     <option value="晚餐">晚餐</option>
                 </select><br>
                 <label for="open-time">开放时间：</label>
-                <input type="text" id="open-time" name="open-time" required><br>
+                <input type="text" id="open-time" name="open-time"><br>
                 <label for="close-time">关闭时间：</label>
-                <input type="text" id="close-time" name="close-time" required><br>
+                <input type="text" id="close-time" name="close-time"><br>
                 <button type="submit">提交</button>
             </form>
             <h2>窗口信息</h2>
@@ -183,14 +183,14 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <h3>插入或修改窗口信息</h3>
+            <h3>窗口信息</h3>
             <form action="/update_window" method="POST">
                 <label for="window-id">窗口编号：</label>
                 <input type="text" id="window-id" name="window-id" required><br>
                 <label for="window-name">窗口名称：</label>
-                <input type="text" id="window-name" name="window-name" required><br>
+                <input type="text" id="window-name" name="window-name" value="删除窗口则无需输入", required><br>
                 <label for="canteen-id2">食堂序号：</label>
-                <input type="text" id="canteen-id2" name="canteen-id2" required><br>
+                <input type="text" id="canteen-id2" name="canteen-id2" value="0" required><br>
                 <button type="submit">提交</button>
             </form>
         </section>                     
@@ -227,8 +227,7 @@
                             <th>图片</th> <!-- 新增图片列 -->
                             <th>菜品名称</th>
                             <th>价格</th>
-                            <th>窗口名</th>
-                            <th>食堂名</th>
+                            <th>在售</th>
                             <th>操作</th> <!-- 新增操作列 -->
                         </tr>
                     </thead>
@@ -239,8 +238,7 @@
                             <td><img src="{{ food.path }}" alt="{{ food.fname }}" style="width: 3vw;"></td> <!-- 新增图片列 -->
                             <td>{{ food.fname }}</td>
                             <td>￥{{ food.price }}</td>
-                            <td>{{ food.wname }}</td>
-                            <td>{{ food.cname }}</td>
+                            <td>{{ food.on_sale }}</td>
                             <td><span class="delete-food" onclick="confirmDeleteFood('{{ food.fid }}')">❌</span></td>
                         </tr>
                         {% endfor %}
@@ -287,7 +285,7 @@
         </section>
         <section id="turnover" class="section">
             <h2>营业额</h2>
-            <p>本月营业额: {{ today_total }}</p>
+            <p>本月营业额: {{ month_total }}</p>
             <canvas id="myChart" width="300" height="300"></canvas>
             {# 以表格形式打印每天的总收入 #}
             <table>

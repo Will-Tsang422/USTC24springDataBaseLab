@@ -144,7 +144,16 @@
             <div class="menu">
                 <h3>菜品列表</h3>
                 <ul>
-                    {% for dish in dishes %}
+                    <h4>早餐</h4>
+                    {% for dish in breakfast %}
+                    <li>{{ dish.fname }} - ￥{{ dish.price }}</li>
+                    {% endfor %}
+                    <h4>午餐</h4>
+                    {% for dish in lunch %}
+                    <li>{{ dish.fname }} - ￥{{ dish.price }}</li>
+                    {% endfor %}
+                    <h4>晚餐</h4>
+                    {% for dish in dinner %}
                     <li>{{ dish.fname }} - ￥{{ dish.price }}</li>
                     {% endfor %}
                 </ul>
@@ -155,7 +164,8 @@
             <h2>个人信息</h2>
             <p>工号: {{ employee_info.eid }}</p>
             <p>姓名: {{ employee_info.ename }}</p>
-            <p>年龄: {{ employee_info.age }}</p>
+            <label>年龄: </label>
+            <input type="text" value="{{ employee_info.age }}" required>
             <p>性别: {{ employee_info.gender }}</p>
             <form action="/update_phone" method="post">
                 <label for="phone">电话: </label>

@@ -92,8 +92,23 @@ DELIMITER //
 CREATE PROCEDURE insert_window(IN in_wid INT, IN in_wname VARCHAR(10), IN in_cid INT)
 BEGIN
     IF EXISTS (SELECT * FROM `Window` WHERE `wid` = in_wid) THEN
-        UPDATE `Window` SET `wname` = in_wname WHERE `wid` = in_wid;
+        IF EXISTS (SELECT * FROM `Canteen` WHERE `cid` = in_cid) THEN
+            UPDATE `Window` SET `wname` = in_wname, `cid` = in_cid WHERE `wid` = in_wid;
+        ELSE
+            UPDATE `employee` SET `wid` = NULL WHERE `wid` = in_wid;
+            DELETE FROM `Supply` WHERE `wid` = in_wid;
+            UPDATE `Income` SET `wid` = NULL WHERE `wid` = in_wid;
+            DELETE FROM `Window` WHERE `wid` = in_wid;
+        END IF;
     ELSE
         INSERT INTO `Window` (`wid`, `wname`, `cid`) VALUES (in_wid, in_wname, in_cid);
     END IF;
+END //
+
+DELIMITER //
+CREATE PROCEDURE delete_canteen(IN in_cid INT)
+BEGIN
+    DELETE FROM `CanteenHours` WHERE `cid` = in_cid;
+    DELETE FROM `Canteen` WHERE `cid` = in_cid;
+    SELECT wid FROM `Window` WHERE `cid` = in_cid;
 END //

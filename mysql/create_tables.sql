@@ -53,7 +53,7 @@ CREATE TABLE `Supply` (
   `meal_type` varchar(10),
   PRIMARY KEY (`wid`, `fid`, `meal_type`)
 );
-
+-- 创建Student表
 CREATE TABLE `Student` (
   `sid` varchar(10) PRIMARY KEY,
   `sname` varchar(10) NOT NULL,
